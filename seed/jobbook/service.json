@@ -1,0 +1,30 @@
+{
+  "kind": "rack",
+  "mode": "managed",
+  "label": "잡",
+  "start": {
+    "cmd": "sh /app/lilak_pipeline/jobbook/portal-serve.sh {port}",
+    "cwd": "/app/lilak_pipeline/jobbook",
+    "env": {}
+  },
+  "health": "/",
+  "entry": "/",
+  "url": null,
+  "token": null,
+  "identity": {
+    "accepts_portal_token": true,
+    "link_by": "email"
+  },
+  "capabilities": {
+    "multi_project": true,
+    "import_export": true,
+    "tags": "jobs"
+  },
+  "entry_project": "jobs",
+  "autostart": [
+    "jobs"
+  ],
+  "icon": "list",
+  "color": "#0f766e",
+  "open": "panel"
+}
