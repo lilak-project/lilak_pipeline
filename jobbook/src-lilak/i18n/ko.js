@@ -1,5 +1,5 @@
 export default {
-  jb_title: "잡",
+  jb_title: "플랫폼",
   jb_unit: "건",
   jb_noun: "잡",
   jb_tab_jobs: "잡",
@@ -23,6 +23,11 @@ export default {
   jb_f_output: "출력 경로",
   jb_f_tags: "태그",
   jb_f_note: "메모",
+  jb_f_goal: "목표",
+  jb_f_why: "근거",
+  jb_f_references: "참고 자료",
+  jb_f_report: "요약·보고서",
+  jb_f_briefing: "브리핑·제안",
   jb_need_title: "제목을 적어 주세요.",
   jb_find_hint: "제목·레시피·런·라벨로 찾기",
 }

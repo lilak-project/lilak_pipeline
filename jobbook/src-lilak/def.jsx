@@ -65,6 +65,13 @@ export default {
       { k: 'output', label: tr('jb_f_output'), type: 'text', mono: true, width: 420 },
       { k: 'tags', label: tr('jb_f_tags'), type: 'tags', col: { w: 130, min: 60, drop: 1400 }, tone: 'dim' },
       { k: 'note', label: tr('jb_f_note'), type: 'longtext', rows: 6 },
+      // What the flow tab tells about a job beside what jobrun knows: why it ran
+      // and what came of it — written by the person or agent who asked for it.
+      { k: 'goal', label: tr('jb_f_goal'), type: 'longtext', rows: 3 },
+      { k: 'why', label: tr('jb_f_why'), type: 'longtext', rows: 4 },
+      { k: 'references', label: tr('jb_f_references'), type: 'longtext', rows: 3 },
+      { k: 'report', label: tr('jb_f_report'), type: 'longtext', rows: 8 },
+      { k: 'briefing', label: tr('jb_f_briefing'), type: 'longtext', rows: 6 },
     ],
   },
   classes: [],

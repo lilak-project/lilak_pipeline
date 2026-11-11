@@ -1,7 +1,8 @@
 {
   "kind": "rack",
   "mode": "managed",
-  "label": "잡",
+  "label": "Platform",
+  "labels": {"ko": "플랫폼"},
   "start": {
     "cmd": "sh /app/lilak_pipeline/jobbook/portal-serve.sh {port}",
     "cwd": "/app/lilak_pipeline/jobbook",
@@ -20,11 +21,11 @@
     "import_export": true,
     "tags": "jobs"
   },
-  "entry_project": "jobs",
+  "entry_project": "platform",
   "autostart": [
-    "jobs"
+    "platform"
   ],
   "icon": "list",
-  "color": "#0f766e",
+  "color": "#334155",
   "open": "panel"
 }

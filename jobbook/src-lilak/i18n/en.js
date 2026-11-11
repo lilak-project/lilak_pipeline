@@ -1,5 +1,5 @@
 export default {
-  jb_title: "jobs",
+  jb_title: "Platform",
   jb_unit: "",
   jb_noun: "job",
   jb_tab_jobs: "jobs",
@@ -23,6 +23,11 @@ export default {
   jb_f_output: "output path",
   jb_f_tags: "tags",
   jb_f_note: "note",
+  jb_f_goal: "goal",
+  jb_f_why: "reasoning",
+  jb_f_references: "references",
+  jb_f_report: "summary / report",
+  jb_f_briefing: "briefing / suggestions",
   jb_need_title: "A title, please.",
   jb_find_hint: "find by title, recipe, run or label",
 }
