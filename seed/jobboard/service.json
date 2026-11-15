@@ -1,0 +1,31 @@
+{
+  "kind": "rack",
+  "mode": "managed",
+  "label": "Jobboard",
+  "labels": {"ko": "잡보드"},
+  "start": {
+    "cmd": "sh /app/lilak_pipeline/jobboard/portal-serve.sh {port}",
+    "cwd": "/app/lilak_pipeline/jobboard",
+    "env": {}
+  },
+  "health": "/",
+  "entry": "/",
+  "url": null,
+  "token": null,
+  "identity": {
+    "accepts_portal_token": true,
+    "link_by": "email"
+  },
+  "capabilities": {
+    "multi_project": true,
+    "import_export": true,
+    "tags": "jobs"
+  },
+  "entry_project": "jobboard",
+  "autostart": [
+    "jobboard"
+  ],
+  "icon": "list",
+  "color": "#334155",
+  "open": "panel"
+}
