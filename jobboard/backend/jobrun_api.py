@@ -93,15 +93,26 @@ def mount(app: FastAPI, store) -> None:
         return out
 
     def project_records(request: Request) -> list:
-        """The projects of this jobboard's set, read through the portal as the caller."""
+        """The projects of this jobboard's set — only their names and tags, to check a submit's
+        project against — read from project_manager's store on disk (one record a file), as
+        projects_place reads the sets. Not through /pp as the caller: a submit the inbox makes
+        for a person carries a delegated token good at jobboard alone (web_service/CLAUDE.md,
+        "How services reach each other"), and project_manager refuses it."""
         place = projects_place()
-        url = f"http://127.0.0.1:{os.environ.get('PORTAL_PORT', '8025')}/pp/project_manager/{place}/api/data"
-        req = urllib.request.Request(url, headers={"Authorization": request.headers.get("authorization", "")})
-        try:
-            with urllib.request.urlopen(req, timeout=15) as r:
-                return [p for p in json.load(r).get("projects") or [] if isinstance(p, dict)]
-        except Exception as exc:  # noqa: BLE001
-            raise HTTPException(502, f"project_manager/{place} 를 읽을 수 없습니다: {exc}") from None
+        d = Path(os.environ.get("PORTAL_DATA_ROOT", "")) / "project_manager" / "projects" / place / "data" / "projects"
+        if not place or not d.is_dir():
+            raise HTTPException(502, f"project_manager/{place or '?'} 를 읽을 수 없습니다: 프로젝트 목록이 없습니다")
+        out = []
+        for f in sorted(d.glob("*.json")):
+            if f.name.startswith("_"):           # the store's own (order, local state)
+                continue
+            try:
+                rec = json.loads(f.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue                          # half-written: the next submit reads it
+            if isinstance(rec, dict):
+                out.append(rec)
+        return out
 
     def _recipes_of(argv: list) -> dict:
         try:
