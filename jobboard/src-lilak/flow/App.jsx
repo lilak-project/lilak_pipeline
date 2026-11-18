@@ -24,6 +24,7 @@ import { modulesLayout } from './rackLayout.js'
 import * as data from './data.js'
 import Modules from './Modules.jsx'
 import JobList, { jobNumbers } from './JobList.jsx'
+import EvidenceLog from './EvidenceLog.jsx'
 import Detail, { TABS } from './Detail.jsx'
 import Bar from './Bar.jsx'
 import { BoardBar, BoardLabel, ProjectPicker } from './BoardBar.jsx'
@@ -65,6 +66,7 @@ export default function App({ api }) {
   const [projects, setProjects] = useState(null) // project_manager's; null until they have come
   const [projectId, setProjectId] = useState(data.boardProject) // whose board this is: a project's id, or flow:<id>
   const [picking, setPicking] = useState(false)
+  const [evLog, setEvLog] = useState(false)   // the right side shows the evidence places' log (EvidenceLog.jsx)
   const [wide, setWide] = useState(false)
   const [root, setRoot] = useState(null) // the job the board is drawn from; choosing a card already on it leaves it
   const [foot, setFoot] = useState(null) // the frame's bottom line, where the bar is drawn
@@ -285,6 +287,21 @@ export default function App({ api }) {
     addEval: async (task, text, verdict, file) => {
       try { await data.putRecord('evaluations', { task, text, author: own.me, by: 'person', ...(verdict ? { verdict } : {}), ...(file ? { file } : {}) }, false); await refreshOwn() } catch { flash(tr('save_failed')) }
     },
+    // What the job stands on: links to reference records, each with its place and why (Evidence.jsx).
+    saveEvidence: async (task, list) => {
+      const by = own.name || String(own.me).split('@')[0]
+      const stamp = (e) => (e.at ? e : { ...e, by, at: now() })
+      const stamped = list.map((e) => ({ ...stamp(e), ...(e.states ? { states: e.states.map(stamp) } : {}) }))
+      try { await data.putRecord('jobs', { id: task, evidence: stamped }, true); await actions.reload(); return true }
+      catch { flash(tr('save_failed')); return false }
+    },
+    promoteEvidence: async (body) => {
+      try { const out = await data.promoteEvidence(body); await actions.reload(); await refreshOwn(); return out }
+      catch (e) { flash(tr('save_failed')); return null }
+    },
+    declineEvidence: async (body) => {
+      try { await data.declineEvidence(body); await refreshOwn(); return true } catch { flash(tr('save_failed')); return false }
+    },
     // The next step's proposal, by a person here: who wrote it rides along (an agent's comes through update_job).
     saveBriefing: async (task, text) => {
       try {
@@ -392,8 +409,9 @@ export default function App({ api }) {
     <div className={`fb-split${wideNow ? ' wide' : ''}`}>
       {/* narrow: one card wide (the flow scrolls past it), with the padding and the border; wide: the whole tab */}
       {!FLOW && <JobList projects={projects} project={project} tasks={live} anchor={anchor} stateOf={stateOf}
-        onChoose={chooseProject} managing={picking} onManage={() => setPicking(!picking)}
-        onOpen={(id) => { if (live && !ix.byId.has(id)) setFrozen(live); setPicking(false); setFocus({ kind: 'task', id }); go({ t: id }, true) }} />}
+        onChoose={chooseProject} managing={picking} onManage={() => { setEvLog(false); setPicking(!picking) }}
+        evOpen={evLog} onEvidence={() => { setPicking(false); setEvLog(!evLog) }}
+        onOpen={(id) => { if (live && !ix.byId.has(id)) setFrozen(live); setPicking(false); setEvLog(false); setFocus({ kind: 'task', id }); go({ t: id }, true) }} />}
       {FLOW && <section className="fb-chart" style={{ width: wideNow ? '100%' : dims.w + 28 + (fits ? 2 : 18) }}>
         <BoardBar label={<BoardLabel project={project} flow={flowPick} />} picking={picking} onPick={() => { setWide(false); setPicking(true) }}
           wide={wide} onWide={() => { setPicking(false); setWide(!wide) }} zoom={zoom} onZoom={setZoom} />
@@ -401,9 +419,10 @@ export default function App({ api }) {
       </section>}
       {(!wideNow || !FLOW) && (
         <section className="fb-info">
-          {picking ? <ProjectPicker projects={projects} current={flowPick ? projectId : project?.id || ''} tasks={live || []} flows={flows} onChoose={chooseProject} onCreate={createProject} onAssign={setFlowProject} onOpen={openJob} />
+          {evLog ? <EvidenceLog log={own.evidenceLog || []} jobs={live || []} onPromote={actions.promoteEvidence} />
+            : picking ? <ProjectPicker projects={projects} current={flowPick ? projectId : project?.id || ''} tasks={live || []} flows={flows} onChoose={chooseProject} onCreate={createProject} onAssign={setFlowProject} onOpen={openJob} />
             : anchor && <Detail task={liveById.get(anchor) || ix.byId.get(anchor)} ix={ix} tab={nav.tab} setTab={(tab) => go({ tab }, false)}
-              name={name} stateOf={stateOf} evaluations={own.evaluations.filter((x) => x.task === anchor)} mine={mine} actions={actions} no={jobNumbers(project, live).get(anchor)} tainted={taint.has(anchor)} review={review.has(anchor)} toConfirm={toConfirm} />}
+              name={name} stateOf={stateOf} evaluations={own.evaluations.filter((x) => x.task === anchor)} mine={mine} actions={actions} allJobs={live || []} evidenceLog={own.evidenceLog || []} no={jobNumbers(project, live).get(anchor)} tainted={taint.has(anchor)} review={review.has(anchor)} toConfirm={toConfirm} />}
         </section>
       )}
     </div>

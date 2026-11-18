@@ -64,4 +64,8 @@ export default {
   file_no: (n) => `${n}번째 파일`,
   f_figures: (n) => `그림 (${n})`, f_other_files: (n) => `파일 (${n})`,
   fig_no: (n) => `그림 ${n}`,
+  ev_title: '근거', ev_none: '아직 이은 근거가 없습니다.', ev_missing: '(없는 레퍼런스)', ev_no_why: '왜인지 적지 않음', ev_drop: '근거 빼기', ev_pick: '레퍼런스 (키나 제목)', ev_place: '자리 (예: Fig. 3)', ev_why: '왜 근거인지', ev_add: '잇기', f_refs_memo: '근거 메모 (예전 글)',
+  ev_ask_new: (n) => `이 자리를 이미 ${n}번 가리켰습니다 — 하위 항목(part)으로 만들까요?`, ev_ask_part: (k) => `이 자리는 이미 하위 항목 ${k}이 있습니다 — 그 항목으로 바꿀까요?`, ev_make_part: '하위 항목 만들기', ev_use_part: '그 항목으로 바꾸기', ev_not_now: '나중에', ev_was: (p) => `(전: ${p})`, ev_was_hint: '하위 항목으로 올리기 전에 가리키던 자리',
+  evs_agent: 'agent 제시', evs_person: '사람 확인', evs_approved: '승인', evs_refuted: '반박됨', evs_corrected: '정정됨', evs_unverifiable: '확인 불가', evs_do_person: '확인', evs_do_approved: '승인', evs_do_refuted: '반박', evs_do_corrected: '정정(새 근거로)', evs_do_unverifiable: '확인 불가', ev_strength: '근거 세기', evw_measurement: '측정', evw_literature: '문헌', evw_evaluated: '평가값', evw_calculation: '계산', evw_assumption: '가정', evw_default: '기본값',
+  evl_title: '근거 기록', evl_hint: '두 번 이상 가리킨 자리: 거절 목록과 하위 항목 승격 기록', evl_declined: '거절한 자리', evl_promoted: '하위 항목으로 올린 기록', evl_none_declined: '거절한 자리가 없습니다.', evl_none_promoted: '아직 올린 자리가 없습니다.', evl_source: '출처', evl_place: '자리', evl_count: '가리킨 수', evl_declines: '거절', evl_last: '마지막 거절', evl_next: '다음에 물을 수', evl_never: '묻지 않음', evl_now: '지금 올리기', evl_existing: '(있던 항목)', evl_moved: (m, n) => `근거 ${m}개 옮김 (그때 ${n}번)`,
 }

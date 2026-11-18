@@ -17,6 +17,7 @@ import { loadJob, fileUrl, loadHistory, approve, confirmAll } from './data.js'
 import { approvalOf, AGENT } from './approval.js'
 import { Approval } from './Card.jsx'
 import RootView from './RootView.jsx'
+import Evidence from './Evidence.jsx'
 import Icon from 'lilak-ui/icons.jsx'
 import { isJobParam } from './graph.js'
 
@@ -322,7 +323,7 @@ function Briefing({ task, onSave }) {
   )
 }
 
-export default function Detail({ task, ix, tab, setTab, name, stateOf, evaluations, mine, actions, no, tainted, review, toConfirm = [] }) {
+export default function Detail({ task, ix, tab, setTab, name, stateOf, evaluations, mine, actions, no, tainted, review, toConfirm = [], allJobs = [], evidenceLog = [] }) {
   const [draft, setDraft] = useState('')
   const [verdict, setVerdict] = useState('')   // good | bad | unsure, or none
   const [rootOpen, setRootOpen] = useState('')  // the .root file drawn open
@@ -370,7 +371,9 @@ export default function Detail({ task, ix, tab, setTab, name, stateOf, evaluatio
         <Item kind="field" id={`${task.id}:people`} label={tr('f_people')} value={people(r, evaluations) || '—'} />
         <Text task={task} k="goal" label={tr('f_goal')} value={r.goal} />
         <Text task={task} k="why" label={tr('f_why')} value={r.why} />
-        <Text task={task} k="references" label={tr('f_refs')} value={r.references} />
+        <div className="fb-sub">{tr('ev_title')}</div>
+        <Evidence task={task} onSave={actions.saveEvidence} jobs={allJobs} log={evidenceLog} onPromote={actions.promoteEvidence} onDecline={actions.declineEvidence} />
+        {r.references && <Text task={task} k="references" label={tr('f_refs_memo')} value={r.references} />}
         {r.note && <Text task={task} k="note" label={tr('f_note')} value={r.note} />}
       </>
     ),

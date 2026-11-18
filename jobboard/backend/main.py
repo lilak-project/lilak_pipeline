@@ -17,6 +17,7 @@ from pathlib import Path
 from fastapi import FastAPI
 
 import approval_api
+import evidence_api
 import flow_api
 import history_api
 import jobrun_api
@@ -27,7 +28,7 @@ DATA = Path(os.environ.get("JOBBOARD_DATA_DIR", "./data"))
 PROJECT = os.environ.get("PORTAL_PROJECT", "")
 DIST = Path(os.environ.get("JOBBOARD_DIST_DIR", "./dist"))
 
-DOC = Document(DATA / "data.json", keys=("jobs", "evaluations", "approval", "prefs", "pins", "settings"), keep_days=30)
+DOC = Document(DATA / "data.json", keys=("jobs", "evaluations", "approval", "evidence_log", "prefs", "pins", "settings"), keep_days=30)
 
 app = FastAPI(title="jobboard")
 DOC.mount(app, project=PROJECT)
@@ -36,6 +37,7 @@ flow_api.mount(app, DATA)
 jobrun_api.mount(app, DOC)
 history_api.mount(app, DOC)
 approval_api.mount(app, DOC)
+evidence_api.mount(app, DOC)
 
 # Must stay last: the catch-all would shadow /api/*.
 mount_spa(app, DIST, name="jobboard")

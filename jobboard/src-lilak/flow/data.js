@@ -71,7 +71,7 @@ export async function loadOwn() {
     fetch(`${PORTAL_BASE}/api/data`, { headers: authHeaders() }).then(json),
     fetch(`${PORTAL_BASE}/api/whoami`, { headers: authHeaders() }).then(json).catch(() => ({})),
   ])
-  return { evaluations: doc.evaluations || [], prefs: doc.prefs || [], pins: doc.pins || [], me: me.email || me.username || '', name: me.username || '' }
+  return { evaluations: doc.evaluations || [], prefs: doc.prefs || [], pins: doc.pins || [], evidenceLog: doc.evidence_log || [], me: me.email || me.username || '', name: me.username || '' }
 }
 
 /** One record into `key` (evaluations, pins) — or, with `id` already there, laid over it (prefs). */
@@ -105,6 +105,10 @@ export async function approve(id, body) {
 export async function confirmAll(ids, reason) {
   return send('POST', '/api/confirm', { ids, reason })
 }
+
+/** A place cited again: make it a part (and re-point every link at it), or "not now" (evidence_api.py). */
+export const promoteEvidence = (body) => send('POST', '/api/evidence/promote', body)
+export const declineEvidence = (body) => send('POST', '/api/evidence/decline', body)
 
 let focusTimer = null
 /** Where I am looking, for a local agent (`GET /api/focus`). Sent at most every 400 ms. */

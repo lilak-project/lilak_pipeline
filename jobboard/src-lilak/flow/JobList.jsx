@@ -49,7 +49,7 @@ export function jobNumbers(project, tasks) {
   return new Map([...mine].sort((a, b) => String(a.at || '').localeCompare(String(b.at || ''))).map((t, i) => [t.id, i + 1]))
 }
 
-export default function JobList({ projects, project, tasks, anchor, stateOf, onChoose, onOpen, onManage, managing }) {
+export default function JobList({ projects, project, tasks, anchor, stateOf, onChoose, onOpen, onManage, managing, onEvidence, evOpen }) {
   const [open, setOpen] = useState(data.listOpen)
   const [width, setWidth] = useState(data.listWidth)
   const box = useRef(null)
@@ -95,6 +95,7 @@ export default function JobList({ projects, project, tasks, anchor, stateOf, onC
           {tree.filter((x) => x.depth === 0).map(({ p }) => <option key={p.id} value={p.id}>{p.name}</option>)}
         </Select>
         <div className="fb-bbar-mid" />
+        <button type="button" className={`fb-bbar-wide${evOpen ? ' on' : ''}`} aria-pressed={evOpen} onClick={onEvidence} title={tr('evl_hint')}>{tr('evl_title')}</button>
         <button type="button" className={`fb-bbar-wide${managing ? ' on' : ''}`} aria-pressed={managing} onClick={onManage}>{tr('list_manage')}</button>
         <button type="button" className="fb-bbar-wide" title={tr('list_fold')} aria-label={tr('list_fold')} onClick={() => fold(false)}>‹</button>
       </div>

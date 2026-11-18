@@ -368,3 +368,30 @@ button.fb-card .fb-card-plate { padding-left: 8px; background: var(--rk-gut); co
 .fb-list-name.s-done { color: #2f9e44; } .fb-list-name.s-failed { color: #b91c1c; }
 .fb-list-name.s-running { color: #1d4ed8; } .fb-list-name.s-queued, .fb-list-name.s-waiting, .fb-list-name.s-stopped { color: var(--rk-dim); }
 .fb-list-row.on .fb-list-name { font-weight: 700; }
+/* Evidence: one line per link — the reference, its place, why — and a line to add one. */
+.fb-ev { border-bottom: 1px solid var(--rk-line); }
+.fb-ev-none { padding: 6px 10px; }
+.fb-ev-row { display: flex; align-items: baseline; gap: 10px; padding: 4px 10px; border-bottom: 1px solid var(--rk-line); }
+.fb-ev-ref { flex: none; border: 0; padding: 0; background: none; font: inherit; font-family: var(--rk-mono); color: var(--rk-cite-t); text-decoration: underline; cursor: pointer; }
+.fb-ev-place { flex: none; padding: 0 5px; border: 1px solid var(--rk-edge); background: var(--rk-head); font-size: var(--fs-small); }
+.fb-ev-why { flex: 1; min-width: 0; white-space: pre-wrap; }
+.fb-ev-by { flex: none; font-size: var(--fs-small); }
+.fb-ev-add { display: flex; gap: 6px; padding: 6px 10px; align-items: center; flex-wrap: wrap; }
+.fb-ev-add input { height: 22px; box-sizing: border-box; padding: 0 6px; font: inherit; border: 1px solid var(--rk-edge); background: var(--rk-panel); color: var(--rk-text); }
+.fb-ev-add input:first-child { flex: 2 1 200px; min-width: 0; }
+.fb-ev-add .fb-ev-at { flex: 0 1 120px; min-width: 0; }
+.fb-ev-add .fb-ev-whyin { flex: 3 1 200px; min-width: 0; }
+.fb-ev-add input.bad { border-color: #b45309; }
+.fb-ev-proj { flex: none; color: var(--rk-dim); font-size: var(--fs-small); font-family: var(--rk-mono); }
+.fb-ev-ask { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 10px 6px 24px; background: var(--rk-cite); color: var(--rk-cite-t); border-bottom: 1px solid var(--rk-line); font-size: var(--fs-small); }
+.fb-ev-was { flex: none; font-size: var(--fs-small); }
+.fb-ev-axes { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 0 10px 6px 24px; font-size: var(--fs-small); }
+/* the same colours as a job's approval: a person's green, an agent's violet, the rest warning or quiet */
+.fb-ev-state { padding: 0 6px; border: 1px solid currentColor; font-weight: 600; }
+.fb-ev-state.s-agent { color: #7c3aed; } .fb-ev-state.s-person, .fb-ev-state.s-approved { color: #2f9e44; }
+.fb-ev-state.s-approved { background: color-mix(in srgb, #2f9e44 12%, transparent); }
+.fb-ev-state.s-refuted { color: #b91c1c; } .fb-ev-state.s-corrected { color: #b45309; } .fb-ev-state.s-unverifiable { color: var(--rk-dim); }
+.fb-evlog-t { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+.fb-evlog-t th, .fb-evlog-t td { text-align: left; padding: 3px 8px; border-bottom: 1px solid var(--rk-line); }
+.fb-evlog-t th { color: var(--rk-dim); font-weight: 400; background: var(--rk-head); }
+.fb-evlog-t td.num { text-align: right; font-family: var(--rk-mono); }
