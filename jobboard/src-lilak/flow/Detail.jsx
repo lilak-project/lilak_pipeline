@@ -17,7 +17,8 @@ import { loadJob, fileUrl, loadHistory, approve, confirmAll } from './data.js'
 import { approvalOf, AGENT } from './approval.js'
 import { Approval } from './Card.jsx'
 import RootView from './RootView.jsx'
-import Evidence from './Evidence.jsx'
+import Evidence, { useEvidenceKeys } from './Evidence.jsx'
+import { checkReport, MARK } from './reportcheck.js'
 import Icon from 'lilak-ui/icons.jsx'
 import { isJobParam } from './graph.js'
 
@@ -323,6 +324,45 @@ function Briefing({ task, onSave }) {
   )
 }
 
+/** The report with its evidence: each [@key] drawn as a chip in its link's state ("agent proposed" shows
+ *  as such), the sentences with a number and no evidence marked, and the tally over them. */
+function Report({ task }) {
+  const r = task.record || {}
+  const keys = useEvidenceKeys(task)
+  if (!String(r.report || '').trim()) return <Text task={task} k="report" label={tr('f_report')} value={r.report} />
+  const { rows, counts } = checkReport(r.report, keys)
+  const chip = (key, i) => {
+    const st = keys.get(key) || 'unknown'
+    return <span key={i} className={`fb-rk s-${st}`} data-tip={tr(st === 'unknown' ? 'rk_unknown' : `evs_${st}`)}>
+      @{key}{st === 'agent' ? ` · ${tr('evs_agent')}` : ''}</span>
+  }
+  const draw = (s) => {
+    const out = []
+    let at = 0
+    for (const m of s.matchAll(MARK)) { out.push(s.slice(at, m.index), chip(m[1], m.index)); at = m.index + m[0].length }
+    out.push(s.slice(at))
+    return out
+  }
+  return (
+    <>
+      <Item kind="field" id={`${task.id}:report`} label={tr('f_report')} text value={
+        <span className="fb-report">{rows.map((row, i) => (
+          <span key={i} className={row.missing ? 'fb-rs missing' : 'fb-rs'} data-tip={row.missing ? tr('rk_missing') : undefined}>{draw(row.text)} </span>
+        ))}</span>} />
+      {counts.need > 0 && (
+        <div className="fb-rk-tally">
+          <span>{tr('rk_tally', counts.need)}</span>
+          <span className={counts.none ? 'bad' : ''}>{tr('rk_none', counts.none)}</span>
+          <span className="s-agent">{tr('rk_agent', counts.agent)}</span>
+          <span>{tr('rk_checked', counts.checked)}</span>
+          <span className="s-approved">{tr('rk_approved', counts.approved)}</span>
+          {counts.unknown > 0 && <span className="bad">{tr('rk_unknown_n', counts.unknown)}</span>}
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function Detail({ task, ix, tab, setTab, name, stateOf, evaluations, mine, actions, no, tainted, review, toConfirm = [], allJobs = [], evidenceLog = [] }) {
   const [draft, setDraft] = useState('')
   const [verdict, setVerdict] = useState('')   // good | bad | unsure, or none
@@ -407,7 +447,7 @@ export default function Detail({ task, ix, tab, setTab, name, stateOf, evaluatio
         <Approvals task={task} onDone={actions.reload} tainted={tainted} review={review} toConfirm={toConfirm} />
         <div className="fb-sub">{tr('tab_results')}</div>
         <Text task={task} k="goal" label={tr('f_goal')} value={r.goal} />
-        <Text task={task} k="report" label={tr('f_report')} value={r.report} />
+        <Report task={task} />
         {/* the pictures under a heading of their own, the other files under theirs */}
         {(liveNote || (job && files.length === 0)) && <div className="fb-sub">{tr('f_files')}</div>}
         {liveNote && <Note>{liveNote}</Note>}

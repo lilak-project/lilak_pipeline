@@ -211,3 +211,14 @@ console.log('ok')
   assert.equal(h.trunks.length, 2)
   assert.equal(h.more.get('z'), 1, 'past the lanes, the parent is counted on the child')
 }
+
+// The report check: numbers need [@key]; an agent's evidence is counted as such; unknown keys counted.
+{
+  const { checkReport, sentences } = await import('./reportcheck.js')
+  assert.deepEqual(sentences('A 1.2 cm. B\nC! D'), ['A 1.2 cm.', 'B', 'C!', 'D'])
+  const keys = new Map([['K1', 'approved'], ['K2', 'agent'], ['K3', 'person']])
+  const { counts, rows } = checkReport('Gain is 80 [@K1]. Width 3 [@K2] [@K1]. Peak 550 ADC. No number here. Rate 2 [@K3]. Seen 4 [@NOPE]. Job ::abc123 done.', keys)
+  assert.deepEqual(counts, { need: 5, none: 2, agent: 1, checked: 1, approved: 1, unknown: 1 })
+  assert.equal(rows.find((r) => r.text.startsWith('Peak')).missing, true)
+  assert.equal(rows.find((r) => r.text.startsWith('Job')).needs, false, 'a job ticket is not a number')
+}

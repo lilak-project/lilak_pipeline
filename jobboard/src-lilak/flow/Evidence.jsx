@@ -17,11 +17,7 @@ import { remoteDocOf, linkProject } from 'racklist/portal.js'
 import { place, slug } from '../../../../lilak_rack/reference_manager/src-lilak/paper.js'
 
 const SVC = 'reference_manager'
-// Besides the set's own reference project, the main reference list people keep (manage set's `papers`):
-// a project sits in one set only, so it cannot join jobboard's; it is read here instead, and skipped
-// when this account may not read it. A link keeps its own proj, so it holds wherever the projects sit.
-// ponytail: one named project; read the main project from the portal if it ever moves.
-const ALSO = ['papers']
+// Only the jobboard set's own reference project (job-references): sets stay independent (user, 2026-11-19).
 const keyOf = (e) => `${e.svc}/${e.proj}/${e.id}/${e.place || ''}`
 const refKey = (proj, id) => `${proj}/${id}`
 
@@ -59,15 +55,16 @@ export default function Evidence({ task, onSave, jobs = [], log = [], onPromote,
 
   useEffect(() => {
     let alive = true
-    const projs = [...new Set([proj, ...ALSO].filter(Boolean))]
+    // Read for display wherever this job's links point; pick only from the set's own project.
+    const projs = [...new Set([proj, ...list.map((e) => e.proj)].filter(Boolean))]
     Promise.all(projs.map((p) => remoteDocOf(SVC, p).then((doc) => (doc?.references || []).map((r) => ({ ...r, proj: p })))
       .catch(() => [])))   // a project this account may not read is simply left out
       .then((lists) => { if (alive) setRefs(new Map(lists.flat().map((r) => [refKey(r.proj, r.id), r]))) })
     return () => { alive = false }
-  }, [proj, round])
+  }, [proj, round, list.map((e) => e.proj).join()])
 
   // The box takes "citeKey — title"; the record is found by the key typed (or the whole line).
-  const options = refs ? [...refs.values()] : []
+  const options = refs ? [...refs.values()].filter((r) => r.proj === proj) : []
   const lineOf = (r) => `${nameOf(r)} — ${r.title || ''} [${r.proj}]`
   const chosen = options.find((r) => pick && (pick === lineOf(r) || pick === nameOf(r)))
   const add = async (e) => {
@@ -167,4 +164,23 @@ export default function Evidence({ task, onSave, jobs = [], log = [], onPromote,
       </form>
     </div>
   )
+}
+
+/** citeKey → the state of this job's link to it, for the report check: one read per project the links name. */
+export function useEvidenceKeys(task) {
+  const list = Array.isArray(task?.record?.evidence) ? task.record.evidence : []
+  const [keys, setKeys] = useState(new Map())
+  const sig = list.map((e) => `${e.proj}/${e.id}/${e.state || ''}`).join()
+  useEffect(() => {
+    let alive = true
+    const projs = [...new Set(list.map((e) => e.proj).filter(Boolean))]
+    Promise.all(projs.map((p) => remoteDocOf(SVC, p).then((d) => (d?.references || []).map((r) => ({ ...r, proj: p }))).catch(() => [])))
+      .then((all) => {
+        if (!alive) return
+        const byId = new Map(all.flat().map((r) => [refKey(r.proj, r.id), r]))
+        setKeys(new Map(list.map((e) => [byId.get(refKey(e.proj, e.id))?.citeKey, stateOf(e)]).filter(([k]) => k)))
+      })
+    return () => { alive = false }
+  }, [sig]) // eslint-disable-line react-hooks/exhaustive-deps
+  return keys
 }

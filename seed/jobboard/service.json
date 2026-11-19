@@ -19,7 +19,8 @@
   "capabilities": {
     "multi_project": true,
     "import_export": true,
-    "tags": "jobs"
+    "tags": "jobs",
+    "delegates": ["reference_manager"]
   },
   "entry_project": "jobboard",
   "autostart": [
