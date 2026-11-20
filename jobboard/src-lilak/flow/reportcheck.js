@@ -6,6 +6,8 @@
  * - the tally: of the sentences that need evidence, how many have none / rest on an
  *   agent's proposal / on checked / on approved evidence.
  * Pure: the screen (Detail.jsx) draws it, graph.check.mjs tests it.
+ * The note's Review mode keeps a python copy of `sentences`/`needsEvidence`
+ * (note backend, GET /api/notes/{id}/units): change both together, and tell the note session.
  */
 export const MARK = /\[@([^\]\s]+)\]/g
 const JOB = /::[0-9a-f]{6}\b/g

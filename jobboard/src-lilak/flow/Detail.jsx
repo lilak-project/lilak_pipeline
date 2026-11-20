@@ -325,7 +325,7 @@ function Briefing({ task, onSave }) {
 }
 
 /** The report with its evidence: each [@key] drawn as a chip in its link's state ("agent proposed" shows
- *  as such), the sentences with a number and no evidence marked, and the tally over them. */
+ *  as such). A sentence without evidence is left as it is (feedback #22); only a key the job does not link is flagged. */
 function Report({ task }) {
   const r = task.record || {}
   const keys = useEvidenceKeys(task)
@@ -347,18 +347,9 @@ function Report({ task }) {
     <>
       <Item kind="field" id={`${task.id}:report`} label={tr('f_report')} text value={
         <span className="fb-report">{rows.map((row, i) => (
-          <span key={i} className={row.missing ? 'fb-rs missing' : 'fb-rs'} data-tip={row.missing ? tr('rk_missing') : undefined}>{draw(row.text)} </span>
+          <span key={i} className="fb-rs">{draw(row.text)} </span>
         ))}</span>} />
-      {counts.need > 0 && (
-        <div className="fb-rk-tally">
-          <span>{tr('rk_tally', counts.need)}</span>
-          <span className={counts.none ? 'bad' : ''}>{tr('rk_none', counts.none)}</span>
-          <span className="s-agent">{tr('rk_agent', counts.agent)}</span>
-          <span>{tr('rk_checked', counts.checked)}</span>
-          <span className="s-approved">{tr('rk_approved', counts.approved)}</span>
-          {counts.unknown > 0 && <span className="bad">{tr('rk_unknown_n', counts.unknown)}</span>}
-        </div>
-      )}
+      {counts.unknown > 0 && <div className="fb-rk-tally"><span className="bad">{tr('rk_unknown_n', counts.unknown)}</span></div>}
     </>
   )
 }

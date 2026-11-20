@@ -396,7 +396,6 @@ button.fb-card .fb-card-plate { padding-left: 8px; background: var(--rk-gut); co
 .fb-evlog-t th { color: var(--rk-dim); font-weight: 400; background: var(--rk-head); }
 .fb-evlog-t td.num { text-align: right; font-family: var(--rk-mono); }
 .fb-report { white-space: pre-wrap; }
-.fb-rs.missing { background: color-mix(in srgb, #b45309 14%, transparent); border-bottom: 1px dashed #b45309; }
 .fb-rk { padding: 0 4px; border: 1px solid currentColor; font-family: var(--rk-mono); font-size: var(--fs-small); white-space: nowrap; }
 .fb-rk.s-approved, .fb-rk.s-person { color: #2f9e44; } .fb-rk.s-agent { color: #7c3aed; } .fb-rk.s-unknown, .fb-rk.s-refuted { color: #b91c1c; } .fb-rk.s-corrected, .fb-rk.s-unverifiable { color: var(--rk-dim); }
 .fb-rk-tally { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 4px 10px 6px; font-size: var(--fs-small); border-bottom: 1px solid var(--rk-line); }
