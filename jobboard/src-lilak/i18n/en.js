@@ -31,6 +31,4 @@ export default {
   jb_f_briefing: "briefing / suggestions",
   jb_need_title: "A title, please.",
   jb_find_hint: "find by title, recipe, run or label",
-  // What the service is, at the foot of its page when nothing else is said there.
-  jb_intro: "Analysis jobs: propose, approve and follow them to a result",
 }

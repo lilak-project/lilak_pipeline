@@ -27,7 +27,7 @@ const fromJobrun = (r) => !!r?.jobId
 const parentsFromJobrun = (r) => Object.values(r?.paramValues || {}).some((v) => /^\d{8}-\d{6}-[0-9a-f]{6}$/.test(String(v)))
 
 export default {
-  name: 'jobboard', title: tr('jb_title'), about: tr('jb_intro'), unit: tr('jb_unit'), key: 'jb',
+  name: 'jobboard', title: tr('jb_title'), unit: tr('jb_unit'), key: 'jb',
   item: {
     key: 'jobs', noun: tr('jb_noun'), allLabel: tr('jb_tab_jobs'), tabId: 'jobs',
     label: (r) => r.title || tr('jb_noun'),
