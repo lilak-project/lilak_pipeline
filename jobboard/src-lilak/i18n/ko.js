@@ -31,4 +31,6 @@ export default {
   jb_f_briefing: "브리핑·제안",
   jb_need_title: "제목을 적어 주세요.",
   jb_find_hint: "제목·레시피·런·라벨로 찾기",
+  // What the service is, at the foot of its page when nothing else is said there.
+  jb_intro: "분석 잡을 제안·승인하고 결과를 따라가는 곳",
 }
